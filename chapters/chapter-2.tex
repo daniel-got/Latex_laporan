@@ -47,11 +47,11 @@ Studi komparatif terbaru oleh El-Hajjami et al. memperlihatkan bahwa model klasi
 Literatur yang ada menunjukkan pola perkembangan yang jelas: setiap pendekatan lahir untuk mengatasi kelemahan pendekatan sebelumnya. Pendekatan ML klasik menawarkan efisiensi tetapi gagal memahami konteks. DL menawarkan pemrosesan sekuensial, namun tetap terbatas di bahasa dengan morfologi kompleks. Transformer hadir untuk menjawab kebutuhan pemahaman semantik yang lebih akurat.
 
 Sintesis ini penting karena menggambarkan bahwa:
-\begin{itemize}[noitemsep]
-    \item penelitian sebelumnya tidak hanya berbeda dalam metode, tetapi dalam alasan teknis mengapa metode tersebut muncul;
-    \item solusi linguistik untuk Bahasa Indonesia tidak bisa langsung mengadopsi hasil penelitian Inggris atau Turki;
-    \item pemilihan model SVM, LSTM, dan DistilBERT dalam penelitian ini didasarkan pada fondasi perkembangan ilmiah, bukan arbitrer.
-\end{itemize}
+\begin{enumerate}[noitemsep]
+    \item Penelitian sebelumnya tidak hanya berbeda dalam metode, tetapi dalam alasan teknis mengapa metode tersebut muncul;
+    \item Solusi linguistik untuk Bahasa Indonesia tidak bisa langsung mengadopsi hasil penelitian Inggris atau Turki;
+    \item Pemilihan model SVM, LSTM, dan DistilBERT dalam penelitian ini didasarkan pada fondasi perkembangan ilmiah, bukan arbitrer.
+\end{enumerate}
 
 \section{Research Gap} \label{II.ResearchGap}
 Berdasarkan tinjauan literatur, terdapat beberapa celah penelitian yang belum terisi:
@@ -67,20 +67,20 @@ Research gap inilah yang menjadi dasar rasional penelitian ini.
 \section{Dasar Teori} \label{II.Teori}
 \subsection{Klasifikasi Kebutuhan}
 Kebutuhan perangkat lunak secara umum dibagi menjadi:
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item \textbf{Kebutuhan Fungsional (FR):} Mendefinisikan fungsi atau perilaku sistem.
     \item \textbf{Kebutuhan Non-Fungsional (NFR):} Menjelaskan batasan kualitas operasi sistem seperti kinerja dan keamanan \cite{Subahi2023}.
-\end{itemize}
+\end{enumerate}
 
 \subsection{Algoritma Klasifikasi}
 \subsubsection{Support Vector Machine (SVM)}
-SVM adalah algoritma \textit{supervised learning} yang mencari \textit{hyperplane} optimal sebagai pemisah antar kelas. Dikombinasikan dengan TF-IDF, SVM unggul dalam menangani teks berdimensi tinggi.
+SVM adalah algoritma \textit{supervised learning} yang mencari \textit{hyperplane} optimal sebagai pemisah antar kelas. Dikombinasikan dengan TF-IDF, SVM unggul dalam menangani teks berdimensi tinggi. Selain itu, SVM relatif stabil pada dataset kecil sehingga cocok sebagai \textit{baseline} pada penelitian dengan sumber data terbatas. Kemampuannya mengontrol margin menjadikan SVM tetap kompetitif dibandingkan model modern pada tugas klasifikasi teks yang sederhana namun padat informasi.
 
 \subsubsection{Bi-directional LSTM (Bi-LSTM)}
-Bi-LSTM memproses input dari dua arah sehingga mampu menangkap konteks panjang dalam kalimat \cite{Di2024}.  
+Bi-LSTM memproses input dari dua arah sehingga mampu menangkap konteks panjang dalam kalimat \cite{Di2024}. Arsitektur dua arah ini membantu model memahami relasi kata yang saling bergantung, khususnya pada kalimat kebutuhan yang sering mengandung struktur kompleks. Meski begitu, Bi-LSTM tetap sensitif terhadap panjang sekuens dan membutuhkan pelatihan lebih lama dibandingkan metode berbasis fitur tradisional.
 
 \subsubsection{Transformer (DistilBERT)}
-DistilBERT adalah versi ringan dari BERT yang mengurangi ukuran model namun tetap mempertahankan performa tinggi melalui mekanisme \textit{self-attention}.
+DistilBERT adalah versi ringan dari BERT yang mengurangi ukuran model namun tetap mempertahankan performa tinggi melalui mekanisme \textit{self-attention}. Mekanisme ini memungkinkan DistilBERT mempelajari hubungan semantik antar kata secara kontekstual, sebuah kemampuan yang sangat penting dalam membedakan FR dan NFR yang sering ambigu. Keunggulan efisiensinya menjadikan DistilBERT lebih mudah dilatih pada dataset kecil tanpa kehilangan kualitas representasi.
 
 \subsection{Metrik Evaluasi}
 Penelitian ini menggunakan F1-Score sebagai metrik utama:
