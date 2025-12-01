@@ -31,42 +31,42 @@ Tahapan penelitian:
 
 \subsection{Sumber Data}
 Dataset dikumpulkan dari:
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item Dokumen Spesifikasi Kebutuhan Perangkat Lunak (SKPL).
     \item Laporan Tugas Akhir bidang Informatika.
     \item Dokumen kebutuhan proyek perangkat lunak \textit{open-source}.
-\end{itemize}
+\end{enumerate}
 
 \subsection{Statistik Dataset}
 Dataset akhir berjumlah 550 kalimat, terdiri dari:
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item FR: 320 kalimat (58.18\%)
     \item NFR: 230 kalimat (41.82\%)
     \item Total: 550 kalimat
     \item Rata-rata panjang kalimat: 17 token
     \item Panjang maksimum: 55 token
-\end{itemize}
+\end{enumerate}
 
 Distribusi ini mengikuti karakteristik alami dokumen kebutuhan di mana FR lebih dominan namun tidak terlalu timpang sehingga tetap cocok untuk model klasifikasi biner.
 
 \subsection{Protokol Anotasi}
 Setiap kalimat dianotasi oleh dua validator dengan pengalaman minimal 3 tahun di bidang RPL. Protokol anotasi meliputi:
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item Pelabelan manual berbasis pedoman ISO/IEC 29148.
     \item Validasi silang pada 20\% sampel dataset.
     \item Reliabilitas inter-annotator diuji menggunakan Cohen’s Kappa dengan nilai 0.72 (kategori \textit{substantial agreement}).
-\end{itemize}
+\end{enumerate}
 
 \section{Pra-pemrosesan Data} \label{III.Preprocessing}
 Penelitian menerapkan pendekatan \textbf{Split-Preprocessing} untuk menyesuaikan kebutuhan arsitektur model berbeda.
 
 \subsection{Pra-pemrosesan Umum}
 Langkah umum:
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item Pembersihan teks: penghapusan URL, tag HTML, karakter non-ASCII, dan simbol.
     \item Case folding menjadi huruf kecil.
     \item Normalisasi spasi dan tanda baca.
-\end{itemize}
+\end{enumerate}
 
 \subsection{Pipeline A: SVM}
 \begin{figure}[H]
@@ -81,14 +81,14 @@ Langkah umum:
 \end{figure}
 
 Untuk SVM, digunakan pendekatan reduksi fitur agresif:
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item Stopword removal menggunakan Sastrawi.
     \item Stemming Nazief–Adriani.
     \item Tokenisasi berbasis whitespace.
-\end{itemize}
+\end{enumerate}
 
 \subsection{Pipeline B: Bi-LSTM dan DistilBERT}
-\begin{itemize}
+\begin{enumerate}
     \item Stopword removal dan stemming \textbf{tidak diterapkan} agar konteks semantik tidak hilang.
     \item Tokenisasi:
     \begin{itemize}
@@ -96,24 +96,24 @@ Untuk SVM, digunakan pendekatan reduksi fitur agresif:
         \item \textbf{DistilBERT}: WordPiece tokenizer.
     \end{itemize}
     \item Padding dan truncation pada panjang tetap 128 token.
-\end{itemize}
+\end{enumerate}
 
 \section{Representasi Fitur} \label{III.Fitur}
 
 \subsection{TF-IDF (SVM)}
 Parameter TF-IDF:
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item \texttt{max\_features} = 5000
     \item \texttt{ngram\_range} = (1,2)
     \item Token pattern: \texttt{[a-zA-Z]+}
-\end{itemize}
+\end{enumerate}
 
 \subsection{Trainable Embedding (Bi-LSTM)}
 Embedding dilatih dari awal:
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item Dimensi embedding: 100
     \item Panjang sekuens: 128 token
-\end{itemize}
+\end{enumerate}
 
 \subsection{Contextual Embedding (DistilBERT)}
 Menggunakan representasi vektor \texttt{[CLS]} dari hidden state terakhir DistilBERT.
@@ -121,12 +121,12 @@ Menggunakan representasi vektor \texttt{[CLS]} dari hidden state terakhir Distil
 \section{Arsitektur dan Implementasi Model} \label{III.Model}
 
 \subsection{Support Vector Machine (SVM)}
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item Kernel: RBF
     \item C = 1.0
     \item Gamma = scale
     \item class\_weight = balanced
-\end{itemize}
+\end{enumerate}
 
 \subsection{Bi-LSTM}
 \begin{figure}[H]
@@ -149,12 +149,12 @@ Arsitektur:
 \end{enumerate}
 
 Hyperparameter:
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item Optimizer: Adam
     \item Learning rate: 1e-3
     \item Batch size: 32
     \item Epoch: 10
-\end{itemize}
+\end{enumerate}
 
 \subsection{DistilBERT}
 \begin{figure}[H]
@@ -169,23 +169,23 @@ Hyperparameter:
 \end{figure}
 
 Konfigurasi:
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item Model: distilbert-base-multilingual-cased
     \item Learning rate: 2e-5
     \item Batch size: 16
     \item Epoch: 3--5
     \item Optimizer: AdamW
     \item Gradient clipping: 1.0
-\end{itemize}
+\end{enumerate}
 
 \section{Skenario Pengujian} \label{III.Skenario}
 
 \subsection{Pembagian Data}
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item Train/Test = 80:20
     \item Stratified sampling
     \item Random seed = 42
-\end{itemize}
+\end{enumerate}
 
 \subsection{Stratified 5-Fold Cross Validation}
 Validasi performa dilakukan menggunakan stratified 5-fold.
@@ -196,33 +196,33 @@ Validasi performa dilakukan menggunakan stratified 5-fold.
 Evaluasi dilakukan dengan TP, TN, FP, dan FN.
 
 \subsection{Metrik Performa}
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item Metrik utama: F1-Score
     \item Metrik tambahan: Precision dan Recall
-\end{itemize}
+\end{enumerate}
 
 \section{Analisis Kesalahan} \label{III.ErrorAnalysis}
 Analisis kesalahan dilakukan dengan mengamati sampel FN dan FP untuk:
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item Mengidentifikasi pola linguistik yang menyebabkan model gagal.
     \item Menemukan jenis kalimat yang rawan salah (misal: negasi, kalimat bercabang, frasa implisit).
     \item Membandingkan kelemahan tiap model berdasarkan pola error.
-\end{itemize}
+\end{enumerate}
 
 \section{Reproducibility dan Kontrol Variabel} \label{III.Repro}
 Untuk memastikan hasil dapat direplikasi:
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item Semua eksperimen dijalankan menggunakan seed = 42.
     \item Preprocessing pipeline dikunci per model (A untuk SVM, B untuk LSTM/BERT).
     \item Seluruh model dilatih menggunakan dataset identik.
     \item Pelatihan dilakukan pada runtime yang sama (Google Colab GPU).
-\end{itemize}
+\end{enumerate}
 
 \section{Lingkungan Pengembangan} \label{III.Lingkungan}
 Eksperimen dijalankan pada:
-\begin{itemize}[noitemsep]
+\begin{enumerate}[noitemsep]
     \item Google Colab GPU (T4/V100)
     \item Python 3.10
     \item TensorFlow 2.15 dan PyTorch 2.1
     \item HuggingFace Transformers, Scikit-learn, Sastrawi, NumPy, Pandas
-\end{itemize}
+\end{enumerate}

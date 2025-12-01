@@ -29,91 +29,91 @@
     %----------------------------------------------------------------%
     
     % Judul Tugas Akhir, dalam Bahasa Indonesia	
-    \title{Komparasi SVM, Bi-LSTM, dan DistilBERT untuk Klasifikasi Otomatis Kebutuhan Perangkat Lunak Fungsional dan Non-Fungsional Indonesia}
-    % Judul Tugas Akhir dalam Bahasa Inggris
-    \titleEN{Comparing SVM, Bi-LSTM, and DistilBERT for Automatic Classification of Indonesian Functional and Non-Functional Requirements}
-    % JUDUL AKAN DITULIS DALAM HURUF KAPITAL; Font size 16 pt; Bold; Tidak melebihi 4 baris
-    
-    % Informasi Mahasiswa
-	\author{Daniel Calvin Simanjuntak}		% Nama Mahasiswa
-	\nim{123140004}				% NIM Mahasiswa
-	
-	%Informasi Dosen Pembimbing
-	\dosbingA%
-		{Dosen Pembimbing I}%			% Nama Dosen Pembimbing 1
-		{NIP. 19900000 2000 00 0 000}	% NIP Dosen Pembimbing 1
-	\dosbingB%
-		{Dosen Pembimbing II}%			% Nama Dosen Pembimbing 2
-		{NIP. 19900000 2000 00 0 000}	% NIP Dosen Pembimbing 2
-		
-	%Informasi Dosen Penguji
-	\pengujiA%
-		{Dosen Penguji I}%				% Nama Dosen Penguji 1
-		{NIP. 19900000 2000 00 0 000}	% NIP Dosen Penguji 1
-	\pengujiB%
-		{Dosen Penguji II}%				% Nama Dosen Penguji 2
-		{NIP. 19900000 2000 00 0 000}	% NIP Dosen Penguji 2
-
-	\sloppy % mencegah text overflow. (Jose)
-    \pagenumbering{roman}
-    \setcounter{page}{1} % Nomor halaman dimulai dengan "ii" di hal. Pengesahan
-
-	%----------------------------------------------------------------%
-	% Konten Laporan
-	%----------------------------------------------------------------%
-	\input{chapters/cover-hard} 	% Hardcover
-	% \input{chapters/approval} 		% Lembar Pengesahan
-    %----------------------------------------------------------------%
-    % Aktivasi twoside (agar ada margin gutter 0.5 cm) & nomor halaman selang-seling
-    % mulai dari setelah Lembar Pengesahan (Ardoni)
-    \clearpage
-	\newgeometry{
-		top=2cm,
-		bottom=2cm,
-		left=2cm,
-		right=2cm,
-		includefoot,
-		heightrounded,
-		bindingoffset=0.5cm,
-		twoside % Agar halaman diset akan bolak-balik
-	}
-    \pagestyle{alternatingstyle}
-    %----------------------------------------------------------------%
-	% \input{chapters/statement} 		% Halaman Pernyataan Orisinalitas
-	% \input{chapters/publication} 	% Halaman Persetujuan Publikasi
-	% \input{chapters/forewords} 		% Kata Pengantar
-	% \input{chapters/summary} 		% Ringkasan
-	% \input{chapters/abstract-id} 	% Abstrak (Indonesia)
-	% \input{chapters/abstract-en} 	% Abstrak (Inggris)    
-    %----------------------------------------------------------------%
-    % Halaman Daftar
-    %----------------------------------------------------------------%    
-	% Daftar Isi
-	\phantomsection% 
-	\addcontentsline{toc}{chapter}{DAFTAR ISI}
-	\tableofcontents
-	% Daftar tabel
-	\phantomsection% 
-	\addcontentsline{toc}{chapter}{DAFTAR TABEL}
-	\listoftables
-  \clearpage
-	% Daftar gambar
-	\phantomsection% 
-	\addcontentsline{toc}{chapter}{DAFTAR GAMBAR} % TODO: No halaman ga selang-seling di Daftar? (RDB)
-	\listoffigures
-  \clearpage
-	% Daftar rumus
-	\pagestyle{daftarrumusstyle}
-	\phantomsection% 
-	\addcontentsline{toc}{chapter}{DAFTAR RUMUS}
-	\listofmyequations
-	\thispagestyle{daftarrumusstyle}
-	% \pagebreak
-	   % \input{chapters/symbols}
-	% Daftar kode
-	%\phantomsection% 
-	%\addcontentsline{toc}{chapter}{DAFTAR KODE}
-	%\lstlistoflistings
+	%    \title{Komparasi SVM, Bi-LSTM, dan DistilBERT untuk Klasifikasi Otomatis Kebutuhan Perangkat Lunak Fungsional dan Non-Fungsional Indonesia}
+	%    % Judul Tugas Akhir dalam Bahasa Inggris
+	%    \titleEN{Comparing SVM, Bi-LSTM, and DistilBERT for Automatic Classification of Indonesian Functional and Non-Functional Requirements}
+	%    % JUDUL AKAN DITULIS DALAM HURUF KAPITAL; Font size 16 pt; Bold; Tidak melebihi 4 baris
+	%
+	%    % Informasi Mahasiswa
+	% \author{Daniel Calvin Simanjuntak}		% Nama Mahasiswa
+	% \nim{123140004}				% NIM Mahasiswa
+	%
+	% %Informasi Dosen Pembimbing
+	% \dosbingA%
+	% 	{Dosen Pembimbing I}%			% Nama Dosen Pembimbing 1
+	% 	{NIP. 19900000 2000 00 0 000}	% NIP Dosen Pembimbing 1
+	% \dosbingB%
+	% 	{Dosen Pembimbing II}%			% Nama Dosen Pembimbing 2
+	% 	{NIP. 19900000 2000 00 0 000}	% NIP Dosen Pembimbing 2
+	%
+	% %Informasi Dosen Penguji
+	% \pengujiA%
+	% 	{Dosen Penguji I}%				% Nama Dosen Penguji 1
+	% 	{NIP. 19900000 2000 00 0 000}	% NIP Dosen Penguji 1
+	% \pengujiB%
+	% 	{Dosen Penguji II}%				% Nama Dosen Penguji 2
+	% 	{NIP. 19900000 2000 00 0 000}	% NIP Dosen Penguji 2
+	%
+	% \sloppy % mencegah text overflow. (Jose)
+	%    \pagenumbering{roman}
+	%    \setcounter{page}{1} % Nomor halaman dimulai dengan "ii" di hal. Pengesahan
+	%
+	% %----------------------------------------------------------------%
+	% % Konten Laporan
+	% %----------------------------------------------------------------%
+	% \input{chapters/cover-hard} 	% Hardcover
+	% % \input{chapters/approval} 		% Lembar Pengesahan
+	%    %----------------------------------------------------------------%
+	%    % Aktivasi twoside (agar ada margin gutter 0.5 cm) & nomor halaman selang-seling
+	%    % mulai dari setelah Lembar Pengesahan (Ardoni)
+	%    \clearpage
+	% \newgeometry{
+	% 	top=2cm,
+	% 	bottom=2cm,
+	% 	left=2cm,
+	% 	right=2cm,
+	% 	includefoot,
+	% 	heightrounded,
+	% 	bindingoffset=0.5cm,
+	% 	twoside % Agar halaman diset akan bolak-balik
+	% }
+	%    \pagestyle{alternatingstyle}
+	%    %----------------------------------------------------------------%
+	% % \input{chapters/statement} 		% Halaman Pernyataan Orisinalitas
+	% % \input{chapters/publication} 	% Halaman Persetujuan Publikasi
+	% % \input{chapters/forewords} 		% Kata Pengantar
+	% % \input{chapters/summary} 		% Ringkasan
+	% % \input{chapters/abstract-id} 	% Abstrak (Indonesia)
+	% % \input{chapters/abstract-en} 	% Abstrak (Inggris)    
+	%    %----------------------------------------------------------------%
+	%    % Halaman Daftar
+	%    %----------------------------------------------------------------%    
+	% % Daftar Isi
+	% \phantomsection% 
+	% \addcontentsline{toc}{chapter}{DAFTAR ISI}
+	% \tableofcontents
+	% % Daftar tabel
+	% \phantomsection% 
+	% \addcontentsline{toc}{chapter}{DAFTAR TABEL}
+	% \listoftables
+	%  \clearpage
+	% % Daftar gambar
+	% \phantomsection% 
+	% \addcontentsline{toc}{chapter}{DAFTAR GAMBAR} % TODO: No halaman ga selang-seling di Daftar? (RDB)
+	% \listoffigures
+	%  \clearpage
+	% % Daftar rumus
+	% \pagestyle{daftarrumusstyle}
+	% \phantomsection% 
+	% \addcontentsline{toc}{chapter}{DAFTAR RUMUS}
+	% \listofmyequations
+	% \thispagestyle{daftarrumusstyle}
+	% % \pagebreak
+	%    % \input{chapters/symbols}
+	% % Daftar kode
+	% %\phantomsection% 
+	% %\addcontentsline{toc}{chapter}{DAFTAR KODE}
+	% %\lstlistoflistings
 	\pagebreak
     %----------------------------------------------------------------%
     % Konfigurasi Bab
@@ -150,20 +150,20 @@
     % \input{chapters/chapter-5}
 	%----------------------------------------------------------------%
     % Daftar Pustaka
-    \newpage
-    \phantomsection% 
-    \addcontentsline{toc}{chapter}{DAFTAR PUSTAKA}
-    % \bibliographystyle{ieeetr}
-    \printbibliography[title={Daftar Pustaka}]
-	%----------------------------------------------------------------%
-    % Lampiran
-    %----------------------------------------------------------------%
-    % TODO: Tabel Lampiran
-    %\newpage
-    %\appendix
-    %\addcontentsline{toc}{chapter}{LAMPIRAN}
-    %\chapter*{Lampiran}
-    %\renewcommand\thesection{\Alph{section}}
-    %\input{chapters/appendix}
-    %----------------------------------------------------------------%
+	%    \newpage
+	%    \phantomsection% 
+	%    \addcontentsline{toc}{chapter}{DAFTAR PUSTAKA}
+	%    % \bibliographystyle{ieeetr}
+	%    \printbibliography[title={Daftar Pustaka}]
+	% %----------------------------------------------------------------%
+	%    % Lampiran
+	%    %----------------------------------------------------------------%
+	%    % TODO: Tabel Lampiran
+	%    %\newpage
+	%    %\appendix
+	%    %\addcontentsline{toc}{chapter}{LAMPIRAN}
+	%    %\chapter*{Lampiran}
+	%    %\renewcommand\thesection{\Alph{section}}
+	%    %\input{chapters/appendix}
+	%    %----------------------------------------------------------------%
 \end{document}
