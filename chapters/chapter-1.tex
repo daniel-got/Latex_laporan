@@ -1,0 +1,58 @@
+\newpage
+\chapter{PENDAHULUAN} \label{Bab I}
+
+\section{Latar Belakang} \label{I.Latar Belakang}
+Rekayasa kebutuhan merupakan tahap fundamental dalam pengembangan perangkat lunak karena kualitas kebutuhan menentukan keberhasilan tahap desain, implementasi, dan pemeliharaan. Namun, kesalahan dalam mengidentifikasi dan mengklasifikasikan kebutuhan masih menjadi masalah klasik. Berbagai laporan industri menunjukkan bahwa kegagalan memahami kebutuhan, khususnya \textit{Non-Functional Requirements} (NFR), menyumbang 60–80\% masalah pada proyek perangkat lunak dan berdampak langsung pada biaya maupun kualitas sistem \cite{Kaur2023}. Bahkan dalam konteks \textit{agile}, kelalaian terhadap NFR dapat meningkatkan risiko kegagalan proyek hingga 60\% \cite{Li2022}.\par
+
+Sementara itu, proses klasifikasi kebutuhan secara manual masih bersifat lambat, mahal, dan rentan inkonsistensi antar-analis. Tantangan ini semakin besar karena NFR sering tersebar, implisit, dan ditulis dalam kalimat panjang yang ambigu \cite{Kaur2023}. Ketidakakuratan dalam mengklasifikasikan \textit{Functional Requirements} (FR) dan NFR dapat berdampak fatal, seperti desain arsitektur yang salah arah, duplikasi fitur, pengujian yang tidak tepat, hingga kegagalan sistem.\par
+
+Berbagai pendekatan \textit{machine learning} telah diteliti untuk mengotomatiskan proses klasifikasi kebutuhan. Pendekatan tradisional berbasis TF-IDF, SVM, dan Naive Bayes menunjukkan performa yang cukup baik namun memiliki keterbatasan pada representasi fitur karena mengabaikan konteks linguistik dan struktur kalimat \cite{Kaur2023}. Kemunculan model berbasis \textit{deep learning} seperti LSTM dan CNN meningkatkan akurasi, tetapi masih memiliki kelemahan pada pemahaman konteks yang lebih dalam \cite{Li2022}.\par
+
+Perkembangan terbaru menunjukkan bahwa model transformer seperti BERT, RoBERTa, dan variannya memberikan kinerja unggul untuk klasifikasi kebutuhan karena kemampuannya memahami hubungan semantik dua-arah dalam bahasa alami. Studi internasional terbaru memperlihatkan bahwa BERT dan turunannya dapat mencapai akurasi hingga 95\% dalam membedakan FR dan NFR pada bahasa Inggris dan Turki \cite{Yucalar2023}. Model \textit{hybrid} seperti BERT-BiCNN atau BERT-CNN juga terbukti meningkatkan performa klasifikasi \cite{Kaur2023}.\par
+
+Namun, hampir seluruh penelitian tersebut dilakukan pada bahasa Inggris, Turki, atau bahasa lain dengan sumber daya bahasa yang relatif kaya. Dalam konteks Bahasa Indonesia, penelitian NLP masih menghadapi keterbatasan dataset anotasi, kelangkaan \textit{benchmark}, dan minimnya penelitian sistematis untuk model klasifikasi kebutuhan \cite{Koto2020}. Meskipun telah tersedia IndoBERT sebagai model pra-latih Bahasa Indonesia, sebagian besar studi mengarah pada \textit{dialog systems}, NER, atau \textit{sentiment analysis}, bukan pada domain \textit{Requirements Engineering} \cite{Di2024}.
+
+\section{Rumusan Masalah} \label{I.Rumusan Masalah}
+Berdasarkan latar belakang yang telah dijelaskan, penelitian ini merumuskan masalah berikut:
+\begin{enumerate}[noitemsep]
+	\item Bagaimana membangun dataset klasifikasi kebutuhan perangkat lunak berbahasa Indonesia yang tervalidasi, terstruktur, dan dapat direplikasi, mengingat belum adanya dataset FR/NFR berbahasa Indonesia yang tersedia secara publik?
+	\item Bagaimana performa metode pembelajaran mesin klasik seperti \textit{Support Vector Machine} (SVM) dan model \textit{deep learning} seperti \textit{Long Short-Term Memory} (LSTM) dalam melakukan klasifikasi \textit{Functional Requirements} (FR) dan \textit{Non-Functional Requirements} (NFR) pada data berbahasa Indonesia?
+	\item Bagaimana kinerja model transformer berbahasa Indonesia, khususnya IndoBERT dan DistilBERT, dibandingkan SVM dan LSTM dalam tugas klasifikasi FR/NFR, serta model mana yang memberikan akurasi terbaik dalam konteks sumber daya linguistik Indonesia yang terbatas?
+	\item Faktor linguistik atau pola apa saja yang menyebabkan model tertentu (SVM, LSTM, IndoBERT, DistilBERT) mengalami kesalahan klasifikasi terhadap FR dan NFR pada Bahasa Indonesia?
+\end{enumerate}
+
+\section{Tujuan Penelitian} \label{I.Tujuan}
+Berdasarkan rumusan masalah, penelitian ini memiliki tujuan sebagai berikut:
+\begin{enumerate}[noitemsep]
+	\item Menghasilkan dataset klasifikasi kebutuhan perangkat lunak berbahasa Indonesia yang tervalidasi, terstruktur, dan layak digunakan sebagai acuan penelitian lanjutan dalam domain klasifikasi FR dan NFR.
+	\item Mengevaluasi performa metode pembelajaran mesin klasik, khususnya \textit{Support Vector Machine} (SVM), dalam mengklasifikasikan \textit{Functional Requirements} (FR) dan \textit{Non-Functional Requirements} (NFR) pada data berbahasa Indonesia.
+	\item Menganalisis kinerja model \textit{deep learning} berbasis LSTM dalam mengolah karakteristik linguistik Bahasa Indonesia untuk tugas klasifikasi FR/NFR.
+	\item Mengevaluasi secara empiris efektivitas model transformer berbahasa Indonesia, terutama IndoBERT dan DistilBERT, dalam tugas klasifikasi FR/NFR, serta membandingkannya dengan pendekatan SVM dan LSTM.
+	\item Mengidentifikasi pola kesalahan klasifikasi yang muncul pada setiap model, meliputi aspek linguistik, struktur kalimat, serta karakteristik FR dan NFR yang menyebabkan model gagal membedakan kedua kategori.
+\end{enumerate}
+
+\section{Batasan Masalah} \label{I.Batasan}
+Penelitian ini dibatasi oleh ruang lingkup berikut:
+\begin{enumerate}[noitemsep]
+	\item Data yang digunakan hanya mencakup kebutuhan perangkat lunak berbahasa Indonesia, baik yang berasal dari dokumen publik, studi kasus akademik, maupun sumber terbuka yang telah melalui proses seleksi dan validasi.
+	\item Klasifikasi yang dilakukan terbatas pada dua kategori, yaitu \textit{Functional Requirements} (FR) dan \textit{Non-Functional Requirements} (NFR), tanpa membedakan sub-kategori NFR secara lebih rinci.
+	\item Model pembelajaran yang dievaluasi dibatasi pada tiga pendekatan utama, yaitu:
+	\begin{enumerate}[noitemsep]
+		\item Metode pembelajaran mesin (SVM).
+		\item Model \textit{deep learning} berbasis LSTM.
+		\item Model transformer IndoBERT dan DistilBERT.
+	\end{enumerate}
+	\item Eksplorasi \textit{hyperparameter} dilakukan dalam batas wajar dan tidak mencakup \textit{grid search} ekstensif.
+	\item Penelitian tidak membahas proses pengembangan sistem pendukung keputusan, melainkan berfokus pada evaluasi model klasifikasi dan analisis hasilnya.
+	\item Evaluasi performa terbatas pada metrik klasifikasi umum, seperti akurasi, presisi, \textit{recall}, dan \textit{F1-score}, tanpa mengevaluasi aspek efisiensi komputasi secara mendalam.
+\end{enumerate}
+
+\section{Kontribusi Penelitian} \label{I.Kontribusi}
+Penelitian ini memberikan kontribusi sebagai berikut:
+\begin{enumerate}[noitemsep]
+	\item Pembuatan dataset klasifikasi kebutuhan perangkat lunak berbahasa Indonesia yang tervalidasi, terstruktur, dan dapat direplikasi. Dataset ini menutup kekosongan sumber data FR/NFR berbahasa Indonesia yang sebelumnya tidak tersedia di literatur maupun repositori publik.
+	\item Penyusunan \textit{baseline} model untuk klasifikasi FR dan NFR dalam Bahasa Indonesia, mencakup pendekatan pembelajaran mesin (SVM), \textit{deep learning} (LSTM), serta dua model transformer berbahasa Indonesia (IndoBERT dan DistilBERT). \textit{Baseline} ini memberikan landasan evaluasi bagi penelitian lanjutan di bidang \textit{Requirements Engineering} berbasis NLP.
+	\item Evaluasi komparatif yang sistematis terhadap tiga pendekatan klasifikasi (SVM, LSTM, transformer) pada dataset Bahasa Indonesia, sehingga menunjukkan model yang paling efektif dalam konteks sumber daya linguistik Indonesia yang terbatas.
+	\item Analisis mendalam terhadap pola kesalahan klasifikasi yang mencakup aspek linguistik, struktur kalimat, dan karakteristik FR/NFR. Analisis ini menghasilkan pemahaman baru tentang tantangan khusus Bahasa Indonesia dalam tugas klasifikasi kebutuhan, serta titik lemah dan kekuatan masing-masing model.
+	\item Penyediaan fondasi awal bagi pengembangan otomatisasi rekayasa kebutuhan berbahasa Indonesia, terutama pada tahap analisis awal dokumen kebutuhan, sehingga hasil penelitian dapat digunakan sebagai referensi akademik maupun aplikasi praktis di lingkungan industri.
+\end{enumerate}

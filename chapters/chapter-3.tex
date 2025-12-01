@@ -1,0 +1,228 @@
+\newpage
+\chapter{METODE PENELITIAN} \label{Bab III}
+
+\section{Alur Penelitian} \label{III.Alur}
+Penelitian ini menggunakan pendekatan eksperimental komparatif untuk mengevaluasi kinerja tiga generasi model pembelajaran mesin dalam klasifikasi \textit{Functional Requirements} (FR) dan \textit{Non-Functional Requirements} (NFR). Proses penelitian meliputi konstruksi dataset, pra-pemrosesan adaptif, rekayasa fitur, pelatihan model, serta evaluasi menggunakan \textit{Stratified 5-Fold Cross Validation}.
+
+Diagram alir metodologi ditunjukkan pada Gambar \ref{fig:3.alur}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[
+        width=0.95\textwidth,
+        height=0.85\textheight,
+        keepaspectratio
+    ]{figure/diagram.png}
+    \caption{Diagram Alir Tahapan Penelitian}
+    \label{fig:3.alur}
+\end{figure}
+
+Tahapan penelitian:
+\begin{enumerate}[noitemsep]
+    \item Konstruksi dataset mandiri.
+    \item Pra-pemrosesan data adaptif berdasarkan arsitektur model.
+    \item Rekayasa fitur: TF-IDF, trainable embedding, contextual embedding.
+    \item Pelatihan tiga model: SVM, Bi-LSTM, dan DistilBERT.
+    \item Evaluasi numerik dan analisis kesalahan.
+    \item Reproducibility dan kontrol variabel.
+\end{enumerate}
+
+\section{Konstruksi Dataset} \label{III.Dataset}
+
+\subsection{Sumber Data}
+Dataset dikumpulkan dari:
+\begin{itemize}[noitemsep]
+    \item Dokumen Spesifikasi Kebutuhan Perangkat Lunak (SKPL).
+    \item Laporan Tugas Akhir bidang Informatika.
+    \item Dokumen kebutuhan proyek perangkat lunak \textit{open-source}.
+\end{itemize}
+
+\subsection{Statistik Dataset}
+Dataset akhir berjumlah 550 kalimat, terdiri dari:
+\begin{itemize}[noitemsep]
+    \item FR: 320 kalimat (58.18\%)
+    \item NFR: 230 kalimat (41.82\%)
+    \item Total: 550 kalimat
+    \item Rata-rata panjang kalimat: 17 token
+    \item Panjang maksimum: 55 token
+\end{itemize}
+
+Distribusi ini mengikuti karakteristik alami dokumen kebutuhan di mana FR lebih dominan namun tidak terlalu timpang sehingga tetap cocok untuk model klasifikasi biner.
+
+\subsection{Protokol Anotasi}
+Setiap kalimat dianotasi oleh dua validator dengan pengalaman minimal 3 tahun di bidang RPL. Protokol anotasi meliputi:
+\begin{itemize}[noitemsep]
+    \item Pelabelan manual berbasis pedoman ISO/IEC 29148.
+    \item Validasi silang pada 20\% sampel dataset.
+    \item Reliabilitas inter-annotator diuji menggunakan Cohen’s Kappa dengan nilai 0.72 (kategori \textit{substantial agreement}).
+\end{itemize}
+
+\section{Pra-pemrosesan Data} \label{III.Preprocessing}
+Penelitian menerapkan pendekatan \textbf{Split-Preprocessing} untuk menyesuaikan kebutuhan arsitektur model berbeda.
+
+\subsection{Pra-pemrosesan Umum}
+Langkah umum:
+\begin{itemize}[noitemsep]
+    \item Pembersihan teks: penghapusan URL, tag HTML, karakter non-ASCII, dan simbol.
+    \item Case folding menjadi huruf kecil.
+    \item Normalisasi spasi dan tanda baca.
+\end{itemize}
+
+\subsection{Pipeline A: SVM}
+\begin{figure}[H]
+    \centering
+    \includegraphics[
+        width=0.95\textwidth,
+        height=0.60\textheight,
+        keepaspectratio
+    ]{figure/flow_svm.png}
+    \caption{Pipeline Pra-pemrosesan dan Pelatihan SVM}
+    \label{fig:3.flow_svm}
+\end{figure}
+
+Untuk SVM, digunakan pendekatan reduksi fitur agresif:
+\begin{itemize}[noitemsep]
+    \item Stopword removal menggunakan Sastrawi.
+    \item Stemming Nazief–Adriani.
+    \item Tokenisasi berbasis whitespace.
+\end{itemize}
+
+\subsection{Pipeline B: Bi-LSTM dan DistilBERT}
+\begin{itemize}
+    \item Stopword removal dan stemming \textbf{tidak diterapkan} agar konteks semantik tidak hilang.
+    \item Tokenisasi:
+    \begin{itemize}
+        \item \textbf{Bi-LSTM}: word-level tokenization.
+        \item \textbf{DistilBERT}: WordPiece tokenizer.
+    \end{itemize}
+    \item Padding dan truncation pada panjang tetap 128 token.
+\end{itemize}
+
+\section{Representasi Fitur} \label{III.Fitur}
+
+\subsection{TF-IDF (SVM)}
+Parameter TF-IDF:
+\begin{itemize}[noitemsep]
+    \item \texttt{max\_features} = 5000
+    \item \texttt{ngram\_range} = (1,2)
+    \item Token pattern: \texttt{[a-zA-Z]+}
+\end{itemize}
+
+\subsection{Trainable Embedding (Bi-LSTM)}
+Embedding dilatih dari awal:
+\begin{itemize}[noitemsep]
+    \item Dimensi embedding: 100
+    \item Panjang sekuens: 128 token
+\end{itemize}
+
+\subsection{Contextual Embedding (DistilBERT)}
+Menggunakan representasi vektor \texttt{[CLS]} dari hidden state terakhir DistilBERT.
+
+\section{Arsitektur dan Implementasi Model} \label{III.Model}
+
+\subsection{Support Vector Machine (SVM)}
+\begin{itemize}[noitemsep]
+    \item Kernel: RBF
+    \item C = 1.0
+    \item Gamma = scale
+    \item class\_weight = balanced
+\end{itemize}
+
+\subsection{Bi-LSTM}
+\begin{figure}[H]
+    \centering
+    \includegraphics[
+        width=0.95\textwidth,
+        height=0.60\textheight,
+        keepaspectratio
+    ]{figure/flow_lstm.png}
+    \caption{Arsitektur dan Proses Pelatihan Bi-LSTM}
+    \label{fig:3.flow_lstm}
+\end{figure}
+
+Arsitektur:
+\begin{enumerate}[noitemsep]
+    \item Embedding (100 dimensi)
+    \item Bi-LSTM (64 unit)
+    \item Dropout 0.5
+    \item Dense-Sigmoid
+\end{enumerate}
+
+Hyperparameter:
+\begin{itemize}[noitemsep]
+    \item Optimizer: Adam
+    \item Learning rate: 1e-3
+    \item Batch size: 32
+    \item Epoch: 10
+\end{itemize}
+
+\subsection{DistilBERT}
+\begin{figure}[H]
+    \centering
+    \includegraphics[
+        width=0.95\textwidth,
+        height=0.60\textheight,
+        keepaspectratio
+    ]{figure/flow_distilbert.png}
+    \caption{Alur Fine-tuning DistilBERT}
+    \label{fig:3.flow_distilbert}
+\end{figure}
+
+Konfigurasi:
+\begin{itemize}[noitemsep]
+    \item Model: distilbert-base-multilingual-cased
+    \item Learning rate: 2e-5
+    \item Batch size: 16
+    \item Epoch: 3--5
+    \item Optimizer: AdamW
+    \item Gradient clipping: 1.0
+\end{itemize}
+
+\section{Skenario Pengujian} \label{III.Skenario}
+
+\subsection{Pembagian Data}
+\begin{itemize}[noitemsep]
+    \item Train/Test = 80:20
+    \item Stratified sampling
+    \item Random seed = 42
+\end{itemize}
+
+\subsection{Stratified 5-Fold Cross Validation}
+Validasi performa dilakukan menggunakan stratified 5-fold.
+
+\section{Evaluasi dan Validasi} \label{III.Evaluasi}
+
+\subsection{Confusion Matrix}
+Evaluasi dilakukan dengan TP, TN, FP, dan FN.
+
+\subsection{Metrik Performa}
+\begin{itemize}[noitemsep]
+    \item Metrik utama: F1-Score
+    \item Metrik tambahan: Precision dan Recall
+\end{itemize}
+
+\section{Analisis Kesalahan} \label{III.ErrorAnalysis}
+Analisis kesalahan dilakukan dengan mengamati sampel FN dan FP untuk:
+\begin{itemize}[noitemsep]
+    \item Mengidentifikasi pola linguistik yang menyebabkan model gagal.
+    \item Menemukan jenis kalimat yang rawan salah (misal: negasi, kalimat bercabang, frasa implisit).
+    \item Membandingkan kelemahan tiap model berdasarkan pola error.
+\end{itemize}
+
+\section{Reproducibility dan Kontrol Variabel} \label{III.Repro}
+Untuk memastikan hasil dapat direplikasi:
+\begin{itemize}[noitemsep]
+    \item Semua eksperimen dijalankan menggunakan seed = 42.
+    \item Preprocessing pipeline dikunci per model (A untuk SVM, B untuk LSTM/BERT).
+    \item Seluruh model dilatih menggunakan dataset identik.
+    \item Pelatihan dilakukan pada runtime yang sama (Google Colab GPU).
+\end{itemize}
+
+\section{Lingkungan Pengembangan} \label{III.Lingkungan}
+Eksperimen dijalankan pada:
+\begin{itemize}[noitemsep]
+    \item Google Colab GPU (T4/V100)
+    \item Python 3.10
+    \item TensorFlow 2.15 dan PyTorch 2.1
+    \item HuggingFace Transformers, Scikit-learn, Sastrawi, NumPy, Pandas
+\end{itemize}

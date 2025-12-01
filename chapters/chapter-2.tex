@@ -1,0 +1,90 @@
+\newpage
+\chapter{TINJAUAN PUSTAKA} \label{Bab II}
+
+\section{State of the Art} \label{II.StateOfTheArt}
+Penelitian terkait klasifikasi kebutuhan perangkat lunak telah berkembang dalam empat fase besar: (1) pendekatan berbasis \textit{Information Retrieval} (IR), (2) metode \textit{Machine Learning} (ML) klasik, (3) arsitektur \textit{Deep Learning} (DL), dan (4) model transformer.
+
+\subsection{Pendekatan IR dan Machine Learning Klasik}
+Pada tahap awal, klasifikasi FR dan NFR banyak mengandalkan pendekatan IR berbasis pencocokan kata. Metode ini efektif untuk kebutuhan sederhana, tetapi tidak mampu menangkap konteks kalimat yang lebih kompleks.
+
+Perkembangan berikutnya adalah penggunaan metode ML seperti TF-IDF, Na\"ive Bayes, dan Support Vector Machine (SVM). Kaur dan Kaur menunjukkan bahwa pendekatan ini mendominasi penelitian klasifikasi kebutuhan sebelum munculnya model berbasis transformer \cite{Kaur2023}. Namun, metode ini bergantung pada fitur yang diekstraksi secara manual sehingga rentan kehilangan makna semantik \cite{Kaur2023}.
+
+\subsection{Pendekatan Deep Learning}
+Kemunculan arsitektur DL seperti CNN dan LSTM meningkatkan kemampuan model dalam memahami konteks linguistik. Li dan Nong mengembangkan NFRNet (gabungan Bi-LSTM dan BERT) dan berhasil mencapai F1-Score 91\% pada dataset yang diperluas \cite{Li2022}. Namun, performanya masih sangat dipengaruhi ukuran dataset dan struktur bahasa yang kompleks.
+
+\subsection{Model Transformer}
+Transformers mengubah lanskap NLP melalui mekanisme \textit{self-attention} yang memungkinkan pemahaman konteks dua arah. Yucalar menunjukkan bahwa versi BERT khusus bahasa (misalnya BERTurk) jauh mengungguli model multilingual dalam tugas klasifikasi kebutuhan \cite{Yucalar2023}. Kaur dan Kaur juga membuktikan bahwa arsitektur hibrida BERT-CNN mampu meningkatkan akurasi klasifikasi pada dataset PROMISE \cite{Kaur2023}.
+
+Dalam konteks Bahasa Indonesia, penelitian NLP masih berada pada kategori \textit{low-resource}. Koto et al. menegaskan bahwa minimnya dataset anotasi menghambat kinerja model pra-latih \cite{Koto2020}, dan Di et al. menunjukkan bahwa model Indonesia perlu pelatihan tambahan karena perbedaan struktur morfologi \cite{Di2024}.
+
+\subsection{Efektivitas Model Kecil dan ML Klasik}
+Studi komparatif terbaru oleh El-Hajjami et al. memperlihatkan bahwa model klasik seperti SVM tetap kompetitif terhadap LLM dalam klasifikasi kebutuhan, terutama ketika dataset kecil atau domainnya spesifik \cite{ElHajjami2024}. Temuan ini memperkuat relevansi penelitian yang membandingkan tiga generasi model sekaligus: SVM, arsitektur LSTM, dan model transformer Indonesia.
+
+\subsection{Ringkasan Penelitian Terdahulu}
+\begin{longtable}{|p{0.05\textwidth}|p{0.25\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|} 
+	\caption{Ringkasan Penelitian Terdahulu} \label{table:2.literasi}\\
+	\hline
+	\textbf{No.} & \textbf{Studi} & \textbf{Fokus} & \textbf{Metode} & \textbf{Hasil Utama} \\
+	\hline
+	\endfirsthead
+	\hline
+	\textbf{No.} & \textbf{Studi} & \textbf{Fokus} & \textbf{Metode} & \textbf{Hasil Utama} \\
+	\hline
+	\endhead 
+	1. & Yucalar et al. (2023) \cite{Yucalar2023} & Dataset Turki & BERTurk vs ML/DL & Model spesifik bahasa unggul (F1 95\%). \\ 
+	\hline
+	2. & Kaur \& Kaur (2023) \cite{Kaur2023} & Fitur semantik & BERT-BiCNN & Akurasi meningkat dengan arsitektur hibrida. \\ 
+	\hline
+	3. & Li \& Nong (2022) \cite{Li2022} & Ambiguitas NFR & NFRNet & F1 91\% pada dataset diperluas. \\ 
+	\hline
+	4. & El-Hajjami et al. (2024) \cite{ElHajjami2024} & Efektivitas LLM & SVM vs GPT & Model klasik tetap kompetitif. \\ 
+	\hline
+	5. & Subahi (2023) \cite{Subahi2023} & Green IT NFR & Fine-tuned BERT & BERT efektif pada domain spesifik. \\ 
+	\hline
+\end{longtable}
+
+\section{Kualitas Penulisan dan Sintesis Literatur} \label{II.Kualitas}
+Literatur yang ada menunjukkan pola perkembangan yang jelas: setiap pendekatan lahir untuk mengatasi kelemahan pendekatan sebelumnya. Pendekatan ML klasik menawarkan efisiensi tetapi gagal memahami konteks. DL menawarkan pemrosesan sekuensial, namun tetap terbatas di bahasa dengan morfologi kompleks. Transformer hadir untuk menjawab kebutuhan pemahaman semantik yang lebih akurat.
+
+Sintesis ini penting karena menggambarkan bahwa:
+\begin{itemize}[noitemsep]
+    \item penelitian sebelumnya tidak hanya berbeda dalam metode, tetapi dalam alasan teknis mengapa metode tersebut muncul;
+    \item solusi linguistik untuk Bahasa Indonesia tidak bisa langsung mengadopsi hasil penelitian Inggris atau Turki;
+    \item pemilihan model SVM, LSTM, dan DistilBERT dalam penelitian ini didasarkan pada fondasi perkembangan ilmiah, bukan arbitrer.
+\end{itemize}
+
+\section{Research Gap} \label{II.ResearchGap}
+Berdasarkan tinjauan literatur, terdapat beberapa celah penelitian yang belum terisi:
+\begin{enumerate}[noitemsep]
+    \item \textbf{Belum tersedia dataset FR/NFR berbahasa Indonesia} yang terstandarisasi, sebagaimana dinyatakan dalam studi \textit{low-resource} oleh Koto et al. \cite{Koto2020}.
+    \item \textbf{Tidak ada studi yang membandingkan SVM, LSTM, dan transformer khusus Indonesia} dalam klasifikasi FR/NFR.
+    \item \textbf{Minimnya analisis kesalahan berbasis linguistik Bahasa Indonesia}, padahal struktur afiks dan kalimat panjang sering menjadi sumber error.
+    \item \textbf{Belum ada baseline komparatif} yang dapat dijadikan acuan bagi penelitian lanjutan dalam Kebutuhan Perangkat Lunak berbasis NLP.
+\end{enumerate}
+
+Research gap inilah yang menjadi dasar rasional penelitian ini.
+
+\section{Dasar Teori} \label{II.Teori}
+\subsection{Klasifikasi Kebutuhan}
+Kebutuhan perangkat lunak secara umum dibagi menjadi:
+\begin{itemize}[noitemsep]
+    \item \textbf{Kebutuhan Fungsional (FR):} Mendefinisikan fungsi atau perilaku sistem.
+    \item \textbf{Kebutuhan Non-Fungsional (NFR):} Menjelaskan batasan kualitas operasi sistem seperti kinerja dan keamanan \cite{Subahi2023}.
+\end{itemize}
+
+\subsection{Algoritma Klasifikasi}
+\subsubsection{Support Vector Machine (SVM)}
+SVM adalah algoritma \textit{supervised learning} yang mencari \textit{hyperplane} optimal sebagai pemisah antar kelas. Dikombinasikan dengan TF-IDF, SVM unggul dalam menangani teks berdimensi tinggi.
+
+\subsubsection{Bi-directional LSTM (Bi-LSTM)}
+Bi-LSTM memproses input dari dua arah sehingga mampu menangkap konteks panjang dalam kalimat \cite{Di2024}.  
+
+\subsubsection{Transformer (DistilBERT)}
+DistilBERT adalah versi ringan dari BERT yang mengurangi ukuran model namun tetap mempertahankan performa tinggi melalui mekanisme \textit{self-attention}.
+
+\subsection{Metrik Evaluasi}
+Penelitian ini menggunakan F1-Score sebagai metrik utama:
+\begin{equationcaptioned}[eq:2.f1score]{
+    F1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}
+}{Rumus F1-Score}
+\end{equationcaptioned}
