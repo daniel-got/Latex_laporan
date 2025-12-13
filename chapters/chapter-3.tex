@@ -2,227 +2,330 @@
 \chapter{METODE PENELITIAN} \label{Bab III}
 
 \section{Alur Penelitian} \label{III.Alur}
-Penelitian ini menggunakan pendekatan eksperimental komparatif untuk mengevaluasi kinerja tiga generasi model pembelajaran mesin dalam klasifikasi \textit{Functional Requirements} (FR) dan \textit{Non-Functional Requirements} (NFR). Proses penelitian meliputi konstruksi dataset, pra-pemrosesan adaptif, rekayasa fitur, pelatihan model, serta evaluasi menggunakan \textit{Stratified 5-Fold Cross Validation}.
+Penelitian ini menggunakan pendekatan eksperimental komparatif untuk mengevaluasi kinerja tiga generasi model pembelajaran mesin dalam klasifikasi \textit{Functional Requirements} (FR) dan \textit{Non-Functional Requirements} (NFR). Proses penelitian dirancang untuk memastikan validitas internal melalui kontrol variabel yang ketat dan validitas eksternal melalui penggunaan dataset yang representatif.
+
+Tahapan penelitian meliputi:
+\begin{enumerate}
+    \item Konstruksi dataset mandiri dengan total 1.000 sampel.
+    \item Pra-pemrosesan data adaptif berdasarkan arsitektur model.
+    \item Rekayasa fitur: TF-IDF, \textit{trainable embedding}, dan \textit{contextual embedding}.
+    \item Pelatihan tiga model (SVM, Bi-LSTM, DistilBERT) dengan strategi penanganan ketidakseimbangan kelas.
+    \item Evaluasi numerik menggunakan \textit{Stratified 5-Fold Cross Validation}.
+    \item Analisis kesalahan dan interpretabilitas model.
+\end{enumerate}
 
 Diagram alir metodologi ditunjukkan pada Gambar \ref{fig:3.alur}.
 
-\begin{figure}[htbp]
+\begin{figure}[!ht]
     \centering
-    \includegraphics[
-        width=0.95\textwidth,
-        height=0.85\textheight,
-        keepaspectratio
-    ]{figure/diagram.png}
+    \includegraphics[width=0.95\textwidth, height=0.85\textheight, keepaspectratio]{figure/diagram.png}
     \caption{Diagram Alir Tahapan Penelitian}
     \label{fig:3.alur}
 \end{figure}
 
-Tahapan penelitian:
-\begin{enumerate}[noitemsep]
-    \item Konstruksi dataset mandiri.
-    \item Pra-pemrosesan data adaptif berdasarkan arsitektur model.
-    \item Rekayasa fitur: TF-IDF, trainable embedding, contextual embedding.
-    \item Pelatihan tiga model: SVM, Bi-LSTM, dan DistilBERT.
-    \item Evaluasi numerik dan analisis kesalahan.
-    \item Reproducibility dan kontrol variabel.
-\end{enumerate}
-
 \section{Konstruksi Dataset} \label{III.Dataset}
 
 \subsection{Sumber Data}
-Dataset dikumpulkan dari:
-\begin{enumerate}[noitemsep]
+Dataset dikumpulkan dari berbagai sumber untuk menjamin keragaman linguistik, yang meliputi:
+\begin{enumerate}
     \item Dokumen Spesifikasi Kebutuhan Perangkat Lunak (SKPL).
-    \item Laporan Tugas Akhir bidang Informatika.
-    \item Dokumen kebutuhan proyek perangkat lunak \textit{open-source}.
+    \item Laporan Tugas Akhir mahasiswa bidang Informatika.
+    \item Dokumen kebutuhan proyek perangkat lunak \textit{open-source} dari repositori publik.
 \end{enumerate}
 
 \subsection{Statistik Dataset}
-Dataset akhir berjumlah 550 kalimat, terdiri dari:
-\begin{enumerate}[noitemsep]
-    \item FR: 320 kalimat (58.18\%)
-    \item NFR: 230 kalimat (41.82\%)
-    \item Total: 550 kalimat
-    \item Rata-rata panjang kalimat: 17 token
-    \item Panjang maksimum: 55 token
+Total dataset yang dikurasi berjumlah \textbf{1.000 kalimat}, dengan rincian distribusi kelas sebagai berikut:
+\begin{enumerate}
+    \item \textbf{FR}: 580 kalimat (58\%).
+    \item \textbf{NFR}: 420 kalimat (42\%).
+    \item \textbf{Total}: 1.000 kalimat.
+    \item Rata-rata panjang kalimat: 17 token.
+    \item Panjang maksimum: 55 token.
 \end{enumerate}
 
-Distribusi ini mengikuti karakteristik alami dokumen kebutuhan di mana FR lebih dominan namun tidak terlalu timpang sehingga tetap cocok untuk model klasifikasi biner.
+Jumlah data ini (1.000 sampel) dianggap memadai untuk proses \textit{fine-tuning} model bahasa modern dan pelatihan model \textit{Deep Learning} sederhana tanpa risiko \textit{overfitting} yang signifikan, asalkan disertai teknik regularisasi yang tepat. Distribusi kelas mengikuti karakteristik alami dokumen kebutuhan di mana FR cenderung lebih dominan.
 
 \subsection{Protokol Anotasi}
-Setiap kalimat dianotasi oleh dua validator dengan pengalaman minimal 3 tahun di bidang RPL. Protokol anotasi meliputi:
-\begin{enumerate}[noitemsep]
-    \item Pelabelan manual berbasis pedoman ISO/IEC 29148.
+Setiap kalimat dianotasi oleh dua validator dengan pengalaman minimal 3 tahun di bidang Rekayasa Perangkat Lunak (RPL). Protokol anotasi meliputi:
+\begin{enumerate}
+    \item Pelabelan manual berbasis pedoman standar ISO/IEC 29148.
     \item Validasi silang pada 20\% sampel dataset.
-    \item Reliabilitas inter-annotator diuji menggunakan Cohen’s Kappa dengan nilai 0.72 (kategori \textit{substantial agreement}).
+    \item Reliabilitas \textit{inter-annotator} diuji menggunakan Cohen's Kappa dengan nilai 0.72 (kategori \textit{substantial agreement}).
 \end{enumerate}
 
 \section{Pra-pemrosesan Data} \label{III.Preprocessing}
-Penelitian menerapkan pendekatan \textbf{Split-Preprocessing} untuk menyesuaikan kebutuhan arsitektur model berbeda.
+Penelitian menerapkan pendekatan \textbf{Split-Preprocessing} untuk menyesuaikan kebutuhan input arsitektur model yang berbeda.
 
 \subsection{Pra-pemrosesan Umum}
-Langkah umum:
-\begin{enumerate}[noitemsep]
-    \item Pembersihan teks: penghapusan URL, tag HTML, karakter non-ASCII, dan simbol.
-    \item Case folding menjadi huruf kecil.
+Langkah umum yang diterapkan pada seluruh data meliputi:
+\begin{enumerate}
+    \item Pembersihan teks: penghapusan URL, tag HTML, karakter non-ASCII, dan simbol yang tidak relevan.
+    \item \textit{Case folding} menjadi huruf kecil.
     \item Normalisasi spasi dan tanda baca.
 \end{enumerate}
 
 \subsection{Pipeline A: SVM}
-\begin{figure}[H]
+Untuk SVM, digunakan pendekatan reduksi fitur agresif (Gambar \ref{fig:3.flow_svm}):
+\begin{enumerate}
+    \item \textit{Stopword removal} menggunakan pustaka Sastrawi.
+    \item \textit{Stemming} menggunakan algoritma Nazief–Adriani.
+    \item Tokenisasi berbasis \textit{whitespace}.
+\end{enumerate}
+
+\begin{figure}[!ht]
     \centering
-    \includegraphics[
-        width=0.95\textwidth,
-        height=0.60\textheight,
-        keepaspectratio
-    ]{figure/flow_svm.png}
+    \includegraphics[width=0.95\textwidth, height=0.60\textheight, keepaspectratio]{figure/flow_svm.png}
     \caption{Pipeline Pra-pemrosesan dan Pelatihan SVM}
     \label{fig:3.flow_svm}
 \end{figure}
 
-Untuk SVM, digunakan pendekatan reduksi fitur agresif:
-\begin{enumerate}[noitemsep]
-    \item Stopword removal menggunakan Sastrawi.
-    \item Stemming Nazief–Adriani.
-    \item Tokenisasi berbasis whitespace.
-\end{enumerate}
-
 \subsection{Pipeline B: Bi-LSTM dan DistilBERT}
+Untuk menjaga konteks semantik yang dibutuhkan model \textit{Deep Learning}:
 \begin{enumerate}
-    \item Stopword removal dan stemming \textbf{tidak diterapkan} agar konteks semantik tidak hilang.
+    \item \textit{Stopword removal} dan \textit{stemming} \textbf{tidak diterapkan}.
     \item Tokenisasi:
-    \begin{itemize}
-        \item \textbf{Bi-LSTM}: word-level tokenization.
-        \item \textbf{DistilBERT}: WordPiece tokenizer.
-    \end{itemize}
-    \item Padding dan truncation pada panjang tetap 128 token.
+        \begin{enumerate}
+            \item \textbf{Bi-LSTM}: \textit{Word-level tokenization}.
+            \item \textbf{DistilBERT}: \textit{WordPiece tokenizer} (sub-word).
+        \end{enumerate}
+    \item \textit{Padding} dan \textit{truncation} pada panjang tetap 128 token.
 \end{enumerate}
 
 \section{Representasi Fitur} \label{III.Fitur}
 
-\subsection{TF-IDF (SVM)}
-Parameter TF-IDF:
-\begin{enumerate}[noitemsep]
-    \item \texttt{max\_features} = 5000
-    \item \texttt{ngram\_range} = (1,2)
-    \item Token pattern: \texttt{[a-zA-Z]+}
+\subsection{TF-IDF untuk Support Vector Machine (SVM)}
+TF-IDF (\textit{Term Frequency-Inverse Document Frequency}) dipilih karena efisiensi komputasi dan interpretabilitasnya [Salton \& Buckley, 1988]. Metode ini menghasilkan vektor jarang (\textit{sparse vector}) yang stabil untuk model linear.
+
+TF-IDF untuk term $t$ dan dokumen $d$ didefinisikan secara matematis sebagai:
+
+\begin{equation}
+    \text{TF-IDF}(t, d) = \text{TF}(t, d) \times \text{IDF}(t)
+    \label{eq:tfidf}
+\end{equation}
+
+Dimana $\text{TF}(t, d)$ adalah frekuensi term ternormalisasi:
+
+\begin{equation}
+    \text{TF}(t, d) = \frac{n_{t,d}}{\sum_{k} n_{k,d}}
+\end{equation}
+
+Dan IDF mengukur informasi yang dibawa oleh kata tersebut:
+
+\begin{equation}
+    \text{IDF}(t) = \log\left(\frac{N}{df_t}\right) + 1
+\end{equation}
+
+Dimana $N$ adalah total dokumen (1.000) dan $df_t$ adalah jumlah dokumen yang mengandung term $t$.
+
+\textbf{Konfigurasi Parameter:}
+\begin{enumerate}
+    \item \texttt{max\_features}: 5.000 (mengambil 5.000 kata terpenting).
+    \item \texttt{ngram\_range}: (1, 2) (unigram dan bigram).
 \end{enumerate}
 
-\subsection{Trainable Embedding (Bi-LSTM)}
-Embedding dilatih dari awal:
-\begin{enumerate}[noitemsep]
-    \item Dimensi embedding: 100
-    \item Panjang sekuens: 128 token
-\end{enumerate}
+\subsection{Trainable Embedding untuk Bi-LSTM}
+Penelitian ini menggunakan \textit{Trainable Embedding} yang dilatih dari awal (\textit{from scratch}). Keputusan ini didasarkan pada kebutuhan **adaptasi domain spesifik**. Kosakata dalam dokumen *requirements* memiliki distribusi makna yang berbeda dengan korpus bahasa umum (seperti Wikipedia).
 
-\subsection{Contextual Embedding (DistilBERT)}
-Menggunakan representasi vektor \texttt{[CLS]} dari hidden state terakhir DistilBERT.
+Dengan 1.000 sampel data latih, model embedding dimensi 100 ($d=100$) masih dapat konvergen dengan baik tanpa \textit{overfitting} berlebihan, dibandingkan menggunakan \textit{pre-trained} embedding dimensi 300 yang terlalu kompleks untuk tugas ini.
+
+Representasi setiap token input $w_t$ diperoleh melalui operasi *lookup*:
+
+\begin{equation}
+    \mathbf{e}_t = E[w_t] \in \mathbb{R}^{100}
+\end{equation}
+
+Matriks $E$ diperbarui selama proses *backpropagation*.
+
+\subsection{Contextual Embedding untuk DistilBERT}
+DistilBERT menggunakan mekanisme \textit{Self-Attention} untuk menghasilkan representasi kontekstual. Vektor representasi diambil dari \textit{hidden state} terakhir pada token spesial \texttt{[CLS]}, yang merepresentasikan semantik kalimat secara global.
 
 \section{Arsitektur dan Implementasi Model} \label{III.Model}
 
 \subsection{Support Vector Machine (SVM)}
-\begin{enumerate}[noitemsep]
-    \item Kernel: RBF
-    \item C = 1.0
-    \item Gamma = scale
-    \item class\_weight = balanced
-\end{enumerate}
+SVM bekerja dengan mencari \textit{hyperplane} optimal yang memisahkan kelas FR dan NFR. Formulasi optimasi primal SVM [Vapnik, 1995] adalah:
 
-\subsection{Bi-LSTM}
-\begin{figure}[H]
+\begin{equation}
+    \min_{\mathbf{w}, b, \xi} \quad \frac{1}{2}\|\mathbf{w}\|^2 + C\sum_{i=1}^n \xi_i
+\end{equation}
+
+Dengan batasan:
+\begin{equation}
+    y_i(\mathbf{w}^\top \phi(\mathbf{x}_i) + b) \geq 1 - \xi_i
+\end{equation}
+
+Penelitian ini menggunakan Kernel RBF (\textit{Radial Basis Function}):
+\begin{equation}
+    K(\mathbf{x}_i, \mathbf{x}_j) = \exp\left(-\gamma \|\mathbf{x}_i - \mathbf{x}_j\|^2\right)
+\end{equation}
+
+\textbf{Konfigurasi Hyperparameter:}
+\begin{table}[!ht]
+\centering
+\caption{Konfigurasi Hyperparameter SVM}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Parameter} & \textbf{Nilai} \\ \hline
+Kernel & RBF \\ \hline
+C & 1.0 \\ \hline
+Gamma & Scale \\ \hline
+Class Weight & Balanced \\ \hline
+\end{tabular}
+\end{table}
+
+Penggunaan \texttt{class\_weight='balanced'} secara otomatis menyesuaikan bobot penalti berbanding terbalik dengan frekuensi kelas untuk mengatasi ketidakseimbangan data (FR 58\% vs NFR 42\%).
+
+\subsection{Bidirectional LSTM (Bi-LSTM)}
+Bi-LSTM memproses sekuens input dari dua arah menggunakan mekanisme \textit{gating} [Hochreiter \& Schmidhuber, 1997]. Untuk setiap langkah waktu $t$, persamaan pembaruan sel adalah sebagai berikut:
+
+% Rumus 1: Forget Gate
+\begin{equation}
+    f_t = \sigma(W_{f} \cdot [h_{t-1}, x_t] + b_f)
+\end{equation}
+
+% Rumus 2: Input Gate
+\begin{equation}
+    i_t = \sigma(W_{i} \cdot [h_{t-1}, x_t] + b_i)
+\end{equation}
+
+% Rumus 3: Cell Candidate
+\begin{equation}
+    \tilde{C}_t = \tanh(W_{C} \cdot [h_{t-1}, x_t] + b_C)
+\end{equation}
+
+% Rumus 4: Cell State Update
+\begin{equation}
+    C_t = f_t * C_{t-1} + i_t * \tilde{C}_t
+\end{equation}
+
+% Rumus 5: Output Gate
+\begin{equation}
+    o_t = \sigma(W_{o} \cdot [h_{t-1}, x_t] + b_o)
+\end{equation}
+
+% Rumus 6: Hidden State
+\begin{equation}
+    h_t = o_t * \tanh(C_t)
+\end{equation}
+
+Keluaran akhir diperoleh dengan menggabungkan (\textit{concatenate}) state terakhir dari arah maju ($\rightarrow$) dan mundur ($\leftarrow$):
+
+\begin{equation}
+    \mathbf{h}_{\text{final}} = \text{Concat}(\mathbf{h}^{\rightarrow}_T, \mathbf{h}^{\leftarrow}_T)
+\end{equation}
+
+\textbf{Penanganan Ketidakseimbangan Data:}
+Berbeda dengan SVM yang menggunakan parameter bobot, pada Bi-LSTM diterapkan \textbf{Weighted Binary Cross-Entropy Loss}. Fungsi *loss* dimodifikasi dengan bobot $w_j$ yang diberikan lebih besar untuk kelas minoritas (NFR) agar model tidak bias ke kelas mayoritas.
+
+\begin{equation}
+    \mathcal{L} = -\frac{1}{N} \sum_{i=1}^{N} w_{y_i} \left[ y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i) \right]
+\end{equation}
+
+\textbf{Konfigurasi Hyperparameter:}
+Nilai hyperparameter ditentukan melalui \textbf{studi empiris awal} (\textit{preliminary experiments}) pada data validasi untuk mencapai konvergensi yang stabil.
+
+\begin{table}[!ht]
+\centering
+\caption{Hyperparameter Bi-LSTM}
+\label{tab:lstm_params}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Parameter} & \textbf{Nilai} \\ \hline
+Embedding Dim & 100 \\ \hline
+LSTM Units & 64 (Bidirectional) \\ \hline
+Dropout Rate & 0.5 \\ \hline
+Optimizer & Adam ($lr=1e-3$) \\ \hline
+Batch Size & 32 \\ \hline
+Epochs & 10 (Early Stopping) \\ \hline
+L2 Regularization & 0.001 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[!ht]
     \centering
-    \includegraphics[
-        width=0.95\textwidth,
-        height=0.60\textheight,
-        keepaspectratio
-    ]{figure/flow_lstm.png}
-    \caption{Arsitektur dan Proses Pelatihan Bi-LSTM}
+    \includegraphics[width=0.95\textwidth, height=0.60\textheight, keepaspectratio]{figure/flow_lstm.png}
+    \caption{Arsitektur Bi-LSTM}
     \label{fig:3.flow_lstm}
 \end{figure}
 
-Arsitektur:
-\begin{enumerate}[noitemsep]
-    \item Embedding (100 dimensi)
-    \item Bi-LSTM (64 unit)
-    \item Dropout 0.5
-    \item Dense-Sigmoid
-\end{enumerate}
+\subsection{DistilBERT (Fine-Tuning)}
+DistilBERT adalah varian ringan dari BERT yang menggunakan mekanisme \textit{Knowledge Distillation} [Sanh et al., 2019]. Inti dari model ini adalah \textit{Multi-Head Self-Attention}:
 
-Hyperparameter:
-\begin{enumerate}[noitemsep]
-    \item Optimizer: Adam
-    \item Learning rate: 1e-3
-    \item Batch size: 32
-    \item Epoch: 10
-\end{enumerate}
+\begin{equation}
+    \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+\end{equation}
 
-\subsection{DistilBERT}
-\begin{figure}[H]
+Proses \textit{fine-tuning} dilakukan dengan menambahkan satu lapisan klasifikasi (\textit{classification head}) di atas output token \texttt{[CLS]}.
+
+\textbf{Penanganan Ketidakseimbangan Data:}
+Sama halnya dengan Bi-LSTM, pelatihan DistilBERT menggunakan \textbf{WeightedLoss} pada objek \textit{Trainer} dari pustaka HuggingFace, untuk menyeimbangkan kontribusi gradien dari kelas NFR.
+
+\textbf{Konfigurasi Hyperparameter:}
+\begin{table}[!ht]
+\centering
+\caption{Konfigurasi Fine-tuning DistilBERT}
+\label{tab:distilbert_params}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Parameter} & \textbf{Nilai} \\ \hline
+Base Model & distilbert-base-multilingual-cased \\ \hline
+Learning Rate & $2 \times 10^{-5}$ \\ \hline
+Batch Size & 16 \\ \hline
+Epochs & 3 -- 5 \\ \hline
+Optimizer & AdamW \\ \hline
+Weight Decay & 0.01 \\ \hline
+Warmup Steps & 100 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[!ht]
     \centering
-    \includegraphics[
-        width=0.95\textwidth,
-        height=0.60\textheight,
-        keepaspectratio
-    ]{figure/flow_distilbert.png}
+    \includegraphics[width=0.95\textwidth, height=0.60\textheight, keepaspectratio]{figure/flow_distilbert.png}
     \caption{Alur Fine-tuning DistilBERT}
     \label{fig:3.flow_distilbert}
 \end{figure}
 
-Konfigurasi:
-\begin{enumerate}[noitemsep]
-    \item Model: distilbert-base-multilingual-cased
-    \item Learning rate: 2e-5
-    \item Batch size: 16
-    \item Epoch: 3--5
-    \item Optimizer: AdamW
-    \item Gradient clipping: 1.0
-\end{enumerate}
-
 \section{Skenario Pengujian} \label{III.Skenario}
 
 \subsection{Pembagian Data}
-\begin{enumerate}[noitemsep]
-    \item Train/Test = 80:20
-    \item Stratified sampling
-    \item Random seed = 42
+\begin{enumerate}
+    \item Rasio Data Latih/Uji: 80:20.
+    \item Metode: \textit{Stratified Sampling} (mempertahankan rasio kelas).
+    \item \textit{Random Seed}: 42 (untuk reproduktifitas).
 \end{enumerate}
 
 \subsection{Stratified 5-Fold Cross Validation}
-Validasi performa dilakukan menggunakan stratified 5-fold.
+Pengujian dilakukan menggunakan validasi silang 5-lipatan yang terstratifikasi. Hasil akhir merupakan rata-rata dari 5 iterasi pengujian untuk mengurangi bias varians pada estimasi performa.
 
 \section{Evaluasi dan Validasi} \label{III.Evaluasi}
 
-\subsection{Confusion Matrix}
-Evaluasi dilakukan dengan TP, TN, FP, dan FN.
-
 \subsection{Metrik Performa}
-\begin{enumerate}[noitemsep]
-    \item Metrik utama: F1-Score
-    \item Metrik tambahan: Precision dan Recall
-\end{enumerate}
+Evaluasi didasarkan pada elemen \textit{Confusion Matrix} (TP, TN, FP, FN).
+
+\textbf{Precision:}
+\begin{equation}
+    \text{Precision} = \frac{TP}{TP + FP}
+\end{equation}
+
+\textbf{Recall:}
+\begin{equation}
+    \text{Recall} = \frac{TP}{TP + FN}
+\end{equation}
+
+\textbf{F1-Score:}
+Metrik utama yang digunakan adalah F1-Score karena memberikan keseimbangan antara presisi dan recall, terutama pada dataset yang tidak seimbang sempurna.
+
+\begin{equation}
+    \text{F1-Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+\end{equation}
 
 \section{Analisis Kesalahan} \label{III.ErrorAnalysis}
-Analisis kesalahan dilakukan dengan mengamati sampel FN dan FP untuk:
-\begin{enumerate}[noitemsep]
-    \item Mengidentifikasi pola linguistik yang menyebabkan model gagal.
-    \item Menemukan jenis kalimat yang rawan salah (misal: negasi, kalimat bercabang, frasa implisit).
-    \item Membandingkan kelemahan tiap model berdasarkan pola error.
-\end{enumerate}
-
-\section{Reproducibility dan Kontrol Variabel} \label{III.Repro}
-Untuk memastikan hasil dapat direplikasi:
-\begin{enumerate}[noitemsep]
-    \item Semua eksperimen dijalankan menggunakan seed = 42.
-    \item Preprocessing pipeline dikunci per model (A untuk SVM, B untuk LSTM/BERT).
-    \item Seluruh model dilatih menggunakan dataset identik.
-    \item Pelatihan dilakukan pada runtime yang sama (Google Colab GPU).
-\end{enumerate}
+Analisis kesalahan (\textit{Error Analysis}) dilakukan secara kualitatif dengan memeriksa sampel \textit{False Positive} dan \textit{False Negative}. Tujuannya adalah mengidentifikasi pola linguistik spesifik (seperti ambiguitas, negasi, atau struktur kalimat kompleks) yang gagal diprediksi dengan benar oleh model.
 
 \section{Lingkungan Pengembangan} \label{III.Lingkungan}
-Eksperimen dijalankan pada:
-\begin{enumerate}[noitemsep]
-    \item Google Colab GPU (T4/V100)
-    \item Python 3.10
-    \item TensorFlow 2.15 dan PyTorch 2.1
-    \item HuggingFace Transformers, Scikit-learn, Sastrawi, NumPy, Pandas
+Seluruh eksperimen dijalankan pada lingkungan komputasi awan Google Colab dengan spesifikasi:
+\begin{enumerate}
+    \item \textbf{GPU}: NVIDIA Tesla T4 (16GB VRAM) untuk akselerasi pelatihan Deep Learning.
+    \item \textbf{RAM}: 12 GB.
+    \item \textbf{Framework}: TensorFlow 2.15, PyTorch 2.1, HuggingFace Transformers.
+    \item \textbf{Bahasa}: Python 3.10.
 \end{enumerate}
